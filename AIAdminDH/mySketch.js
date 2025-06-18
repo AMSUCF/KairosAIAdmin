@@ -9,6 +9,8 @@ let currentChallenge = {}; // Holds the current challenge for the interaction
 let challengesCompleted = 0; // Track the number of challenges completed
 let endgameMessage = ""; // Message to display in the endgame screen
 let selectedBook = ""; // Store the selected book description
+let selectedTitle = ""; // Store the extracted book title
+let selectedAuthor = ""; // Store the extracted book author
 let selectedColor; // Store the selected color for the book
 let doorImages = {}; // Store the preloaded images
 let phoneImage;
@@ -402,7 +404,7 @@ function displayOffice() {
   background(officeImage);
   checkMouseOverZones();
   displayReputation();
-//	displayCoordinates();
+	//displayCoordinates();
 }
 function displayReputationFeedback() {
   background(officeImage); // Dark blue background for the feedback screen
@@ -639,22 +641,107 @@ function displayCoordinates() {
 }
 
 function displayBookScreen() {
-  background(officeImage); // Black background
-	// Book spine on the left side
-  fill(selectedColor); // Purple fill for the spine  stroke(13, 21, 33);        // Dark blue outline
-  strokeWeight(5);
-  rect(50, 100, 150, 800); // Spine rectangle
-
-  // Dark blue lines across the top of the spine (for the "title" effect)
+  background(officeImage); // Background
+  
+  // Book spine on the left side - make it look more realistic
+  let spineX = 50;
+  let spineY = 100;
+  let spineWidth = 150;
+  let spineHeight = 800;
+  
+  // Main spine body
+  fill(selectedColor);
+  stroke(13, 21, 33);
   strokeWeight(3);
-  for (let i = 0; i < 5; i++) {
-    line(60, 140 + i * 20, 190, 140 + i * 20);
+  rect(spineX, spineY, spineWidth, spineHeight);
+  
+  // Add depth to the spine with a side edge
+  fill(red(selectedColor) * 0.7, green(selectedColor) * 0.7, blue(selectedColor) * 0.7); // Darker shade
+  noStroke();
+  quad(spineX + spineWidth, spineY, spineX + spineWidth + 20, spineY - 10,
+       spineX + spineWidth + 20, spineY + spineHeight - 10, spineX + spineWidth, spineY + spineHeight);
+  
+  // Top edge for depth
+  fill(red(selectedColor) * 1.2, green(selectedColor) * 1.2, blue(selectedColor) * 1.2); // Lighter shade
+  quad(spineX, spineY, spineX + spineWidth, spineY,
+       spineX + spineWidth + 20, spineY - 10, spineX + 20, spineY - 10);
+  
+  // Add spine ridges/texture
+  stroke(13, 21, 33);
+  strokeWeight(1);
+  for (let i = 0; i < 3; i++) {
+    let ridgeY = spineY + 50 + i * 20;
+    line(spineX + 10, ridgeY, spineX + spineWidth - 10, ridgeY);
+    line(spineX + 10, ridgeY + 3, spineX + spineWidth - 10, ridgeY + 3);
   }
-
+  
+  // Book title area on spine
+  fill(255, 255, 255, 200); // Semi-transparent white for label
+  noStroke();
+  rect(spineX + 15, spineY + 200, spineWidth - 30, 300, 5);
+  // Title text on spine (rotated)
+  push();
+  translate(spineX + spineWidth/2, spineY + 350);
+  rotate(HALF_PI);
+  fill(13, 21, 33);
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  textFont('serif');
+  
+  // Check if title fits in one line, if not break it
+  let maxWidth = 280; // Maximum width for the title area
+  textSize(16);
+  if (textWidth(selectedTitle) > maxWidth) {
+    // Break title into multiple lines
+    let words = selectedTitle.split(' ');
+    let lines = [];
+    let currentLine = '';
+    
+    for (let word of words) {
+      let testLine = currentLine + (currentLine === '' ? '' : ' ') + word;
+      if (textWidth(testLine) > maxWidth && currentLine !== '') {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    if (currentLine !== '') {
+      lines.push(currentLine);
+    }
+    
+    // Display multiple lines
+    let lineHeight = 18;
+    let startY = -(lines.length - 1) * lineHeight / 2;
+    for (let i = 0; i < lines.length; i++) {
+      text(lines[i], 0, startY + i * lineHeight);
+    }
+  } else {
+    // Single line display
+    text(selectedTitle, 0, 0);
+  }
+  pop();
+  
+  // Author area on spine
+  push();
+  translate(spineX + spineWidth/2, spineY + 650);
+  rotate(HALF_PI);
+  fill(13, 21, 33);
+  textAlign(CENTER, CENTER);
+  textSize(12);
+  text(selectedAuthor, 0, 0);
+  pop();
+  
+  // Publisher logo/mark at bottom of spine
+  fill(255, 140, 0);
+  noStroke();
+  rect(spineX + 20, spineY + spineHeight - 80, spineWidth - 40, 15, 3);
+  
   // Book page on the right side
   fill(255);        // White fill for the page
   noStroke();
   rect(250, 100, 700, 800); // Page rectangle
+
   // Block of text inside the page
   fill(13, 21, 33);          // Dark blue text color
   textSize(30);
@@ -662,12 +749,12 @@ function displayBookScreen() {
   textAlign(LEFT, TOP);
 
   // Display the text block inside the white rectangle
- // Display the text block inside the white rectangle
   text(selectedBook, 270, 120, 660, 760); // Adjust the text to fit inside the "page"
   fill(255); // White text
   textSize(24);
   textAlign(LEFT, TOP);
-	  // "Click to close the book" box at the bottom
+  
+  // "Click to close the book" box at the bottom
   fill(255, 140, 0); // Orange background for the button
   noStroke();
   let buttonWidth = 350;
@@ -681,46 +768,41 @@ function displayBookScreen() {
   textSize(25);
   textAlign(CENTER, CENTER);
   text("Click to close the book", buttonX + buttonWidth / 2, buttonY + buttonHeight / 2);
-
 }
 
 function checkMouseOverZones() {
   currentZone = ""; // Reset the currentZone when the mouse moves
   let message = ""; // Message to display in the black bar
 	noStroke();	  // Bookshelf zone
-  if (mouseX > 852 && mouseX < 1000 && mouseY > 257 && mouseY < 595) {
+  if (mouseX > 774 && mouseX < 962 && mouseY > 169 && mouseY < 427) {
     fill(255, 140, 0, 150); // Orange highlight
-    rect(852,257,148,338); // Bookshelf dimensions - right
+    rect(774,169,188,258); // Bookshelf dimensions - right
     currentZone = "bookshelf";
     message = books.length > 0 ? "You need more time to just read." : "You really don't have time to read.";
   }if (mouseX > 11 && mouseX < 223 && mouseY > 135 && mouseY < 595) {
     fill(255, 140, 0, 150); // Orange highlight
     rect(11,135,212,460); // Bookshelf dimensions - left
     currentZone = "bookshelf";
-    message = books.length > 0 ? "You need more time to just read." : "You really don't have time to read.";
-  }  // Writing zone
-	if (mouseX > 827 && mouseX < 931 && mouseY > 662 && mouseY < 814) {
+    message = books.length > 0 ? "You need more time to just read." : "You really don't have time to read.";  }  // Writing zone
+	if (mouseX > 270 && mouseX < 351 && mouseY > 626 && mouseY < 767) {
     fill(255, 204, 51, 150); // Yellow highlight
-    rect(827,662,104,152); // Pencil cup dimensions
-    message = "Remember when you had time for your own writing?";
-  }  // Monitor zone
-  if (mouseX > 400 && mouseX < 625 && mouseY > 569 && mouseY < 709) {
+    rect(270, 626, 81, 141); // Pencil cup dimensions
+    message = "Remember when you had time for your own writing?";  }// Monitor zone
+  if (mouseX > 402 && mouseX < 602 && mouseY > 532 && mouseY < 666) {
     fill(44, 62, 80, 150); // Dark blue highlight
-    rect(400, 569, 225, 140); // Monitor dimensions
+    rect(402, 532, 200, 134); // Monitor dimensions
     currentZone = "monitor";
     message = emailChallenges.length > 0 ? "You have so many new emails." : "There are no more emails...for the moment.";
   }
-
   // Door zone (adjust x, y, width, and height based on actual position)
-  if (mouseX > 400 && mouseX < 648 && mouseY > 128 && mouseY < 531) {
+  if (mouseX > 400 && mouseX < 640 && mouseY > 134 && mouseY < 480) {
     fill(255, 140, 0, 150); // Orange highlight
-    rect(403, 128, 250, 406); // Door dimensions
+    rect(400, 134, 240, 346); // Door dimensions
     currentZone = "door";
-    message = doorChallenges.length > 0 ? "There's people waiting outside the office." : "There's no one outside...for now.";
-  }   // Phone zone (adjust x, y, width, and height based on actual position)
-  if (mouseX > 83 && mouseX < 258 && mouseY > 650 && mouseY < 787) {
+    message = doorChallenges.length > 0 ? "There's people waiting outside the office." : "There's no one outside...for now.";  }// Phone zone (adjust x, y, width, and height based on actual position)
+  if (mouseX > 83 && mouseX < 261 && mouseY > 622 && mouseY < 775) {
     fill(255, 204, 51, 150); // Yellow highlight
-    rect(83, 650, 175, 137); // phone dimensions
+    rect(83, 622, 178, 153); // phone dimensions
     currentZone = "phone";
     message = phoneChallenges.length > 0 ? "The phone hasn't stopped ringing." : "The phone is silent...for now.";
   }
@@ -785,6 +867,12 @@ function startBookInteraction() {
 	if (books.length > 0) {
 		currentRoom = "bookshelf";
 		selectedBook = random(books);
+		
+		// Extract title and author from the selected book
+		let bookInfo = extractBookInfo(selectedBook);
+		selectedTitle = bookInfo.title;
+		selectedAuthor = bookInfo.author;
+		
     selectedColor = color(random(180, 255), random(100, 160), random(0, 50)); // Dark blue, yellow, orange range
 		books = books.filter(c => c !== selectedBook);
 		bookshelfActive = true;
@@ -795,7 +883,6 @@ function startBookInteraction() {
       }
 	}
 	feedbackMessage = random(bookshelfMessages);
-
 }
 
 function startMonitorInteraction() {
@@ -1145,6 +1232,50 @@ function adjustReputation(effects) {
     reputationChangeMessage += `Student Reputation: ${effects.student} `;
   }
 
+}
+
+// Function to extract title and author from book text
+function extractBookInfo(bookText) {
+  let title = "";
+  let author = "";
+  
+  // Extract title (text between * markers)
+  let titleMatch = bookText.match(/\*([^*]+)\*/);
+  if (titleMatch) {
+    title = titleMatch[1];
+    // Remove trailing period if present
+    title = title.replace(/\.$/, "");
+  }
+  
+  // Extract author - look for possessive forms or "by" patterns
+  // Pattern 1: "Author's *Title*" - look for possessive before asterisk
+  let authorMatch1 = bookText.match(/([A-Z][a-z]+(?: [A-Z]\.?)?(?: [A-Z][a-z]+)*)'s\s*\*/);
+  if (authorMatch1) {
+    author = authorMatch1[1];
+  } else {
+    // Pattern 2: "Author and Author's *Title*" - multiple authors with possessive
+    let authorMatch2 = bookText.match(/([A-Z][a-z]+(?: [A-Z]\.?)?(?: [A-Z][a-z]+)*)\s+and\s+([A-Z][a-z]+(?: [A-Z]\.?)?(?: [A-Z][a-z]+)*)'s\s*\*/);
+    if (authorMatch2) {
+      author = authorMatch2[1] + " & " + authorMatch2[2];
+    } else {
+      // Pattern 3: "by Author" anywhere in the text
+      let authorMatch3 = bookText.match(/by\s+([A-Z][a-z]+(?: [A-Z][a-z]+)*)/);
+      if (authorMatch3) {
+        author = authorMatch3[1];
+      } else {
+        // Pattern 4: Look for "You [verb] AuthorName's" pattern
+        let authorMatch4 = bookText.match(/You\s+\w+\s+([A-Z][a-z]+(?: [A-Z]\.?)?(?: [A-Z][a-z]+)*)'s\s/);
+        if (authorMatch4) {
+          author = authorMatch4[1];
+        } else {
+          // No clear author pattern found
+          author = "Some Body";
+        }
+      }
+    }
+  }
+  
+  return { title: title || "Unknown Title", author: author || "Some Body" };
 }
 
 function resetGame() {
