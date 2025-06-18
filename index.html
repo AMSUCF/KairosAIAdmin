@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.10.0/lib/p5.js" type="text/javascript"></script>
+    <title>AI Admin: Provocations Through Generated Play - Anastasia Salter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }        #backgroundCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(1px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #title {
+            font-family: 'Press Start 2P', cursive;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+            text-align: center;
+            font-size: 2.5em;
+            margin: 40px 0;
+            line-height: 1.4;
+            animation: neonFlicker 2s infinite alternate;
+        }
+
+        @keyframes neonFlicker {
+            0%, 50% { opacity: 1; }
+            51%, 60% { opacity: 0.8; }
+            61%, 100% { opacity: 1; }
+        }
+
+        .subtitle {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff00ff;
+            text-shadow: 0 0 5px #ff00ff;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .author {
+            text-align: center;
+            font-size: 1.1em;
+            color: #ffff00;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #ffff00;
+        }        #p5Container {
+            display: none;
+        }
+
+        .description {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .description h3 {
+            color: #00ffff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #00ffff;
+        }
+
+        .games-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .game-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #ff00ff;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.5);
+            border-color: #00ffff;
+        }
+
+        .game-card h4 {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff00ff;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+
+        .game-card p {
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .play-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8em;
+            padding: 15px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-shadow: none;
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            margin: 60px 0 40px 0;
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-shadow: 0 0 5px #00ffff;
+        }
+
+        @media (max-width: 768px) {
+            .games-section {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            #title {
+                font-size: 1.8em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="backgroundCanvas"></div>
+    <div class="content-wrapper">
+        <div class="container">
+            <h1 id="title">AI ADMIN</h1>
+            <div class="subtitle">Provocations through Generated Play</div>
+            <div class="author">Anastasia Salter</div>
+            
+            <div id="p5Container"></div>
+        
+        <div class="description">
+            <h3>Project Overview</h3>
+            <p>This interactive project explores the complexities of artificial intelligence in academic administration through two playable games that examine how generative AI tools reshape both writing program administration and digital humanities center leadership. Created primarily through iterative dialogues with large language models, the games themselves embody the collaborative human-AI authorship they critique.</p>
+            
+            <p>Each version presents players with scenarios that highlight the tensions between efficiency and ethics, innovation and exploitation, speed and sustainability. The games ask: What happens when administrative decisions become algorithmic? How do we navigate the environmental costs of computational convenience? What gets lost when human judgment is outsourced to pattern recognition?</p>
+            
+            <p>Rather than offering simple answers, these "provocations through generated play" invite reflection on our evolving relationship with AI tools in higher education. The retro aesthetic and deliberate inefficiencies of the code serve as counterpoints to the sleek promises of AI optimization, suggesting that some forms of resistance might be found in embracing the human, the slow, and the intentionally imperfect.</p>
+        </div>
+
+        <div class="games-section">
+            <div class="game-card">
+                <h4>Writing Program Edition</h4>
+                <p>Navigate the challenges of writing program administration in an AI-saturated academic landscape. From plagiarism detection to student support, every decision carries ethical weight in this exploration of composition pedagogy meets machine learning.</p>
+                <a href="AIAdminWriting/index.html" class="play-button">PLAY WRITING</a>
+            </div>
+            
+            <div class="game-card">
+                <h4>Digital Humanities Edition</h4>
+                <p>Step into the role of a DH center director balancing computational innovation with humanistic values. Grapple with GPU environmental impacts, data ethics, and the challenge of explaining APIs to administrators who just want results.</p>
+                <a href="AIAdminDH/index.html" class="play-button">PLAY DH CENTER</a>
+            </div>
+        </div>
+
+        <div class="description">
+            <h3>On Generated Authorship</h3>
+            <p>These games were created through approximately 200 iterative prompts across multiple AI systems (ChatGPT 4.0, Claude Opus 4.0, Claude Sonnet 4.0, DALL-E 3), with human curation, editing, and hand-coding throughout the process. The resulting artifacts raise questions about agency, creativity, and labor in an age of computational collaboration.</p>
+            
+            <p>The code is intentionally inefficient—over 1,100 lines of JavaScript for relatively simple interactions—serving as a meditation on optimization culture. The visual assets, generated through AI image tools and then extensively modified, reflect a deliberate move away from photorealism toward the aesthetic possibilities of computational creativity.</p>
+            
+            <p>For scholars in rhetoric, composition, and digital humanities, these games offer both a critical lens and a creative methodology. They suggest that our engagement with AI tools might be most productive when it remains reflexive, experimental, and willing to embrace the productive tensions between human and machine authorship.</p>
+        </div>
+
+        <div class="footer">
+            <p>Created for <a href="https://kairos.technorhetoric.net/" target="_blank">Kairos: A Journal of Rhetoric, Technology, and Pedagogy</a></p>            <p>2024 - 2025 <a href="https://anastasiasalter.net" target="_blank">Anastasia Salter</a> | University of Central Florida</p>
+        </div>
+        </div>
+    </div>    <script>
+        let particles = [];
+        let numParticles = 60;
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('backgroundCanvas');
+              // Initialize particles
+            for (let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: random(width),
+                    y: random(height),
+                    vx: random(-0.8, 0.8),
+                    vy: random(-0.8, 0.8),
+                    size: random(4, 8),
+                    color: random(['#00ffff', '#ff00ff', '#ffff00', '#00ff00'])
+                });
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        function draw() {
+            // Dark background with subtle gradient
+            background(10, 5, 25);
+            
+            // Update and draw particles
+            for (let particle of particles) {
+                // Update position
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                
+                // Wrap around edges
+                if (particle.x < 0) particle.x = width;
+                if (particle.x > width) particle.x = 0;
+                if (particle.y < 0) particle.y = height;
+                if (particle.y > height) particle.y = 0;
+                  // Draw particle
+                fill(particle.color + 'CC'); // Less transparent (more opaque)
+                noStroke();
+                ellipse(particle.x, particle.y, particle.size);
+                
+                // Add glow effect
+                for (let r = particle.size; r < particle.size + 10; r += 1) {
+                    let alpha = map(r, particle.size, particle.size + 10, 120, 15);
+                    fill(red(particle.color), green(particle.color), blue(particle.color), alpha);
+                    ellipse(particle.x, particle.y, r);
+                }
+            }
+            
+            // Draw connecting lines between nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    let d = dist(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+                    if (d < 120) {
+                        let alpha = map(d, 0, 120, 100, 10);
+                        stroke(255, 100, 255, alpha);
+                        strokeWeight(0.8);
+                        line(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
