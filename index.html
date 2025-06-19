@@ -79,14 +79,21 @@
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
             line-height: 1.8;
             font-size: 1.1em;
-        }
-
-        .description h3 {
+        }        .description h3 {
             color: #00ffff;
             font-family: 'Press Start 2P', cursive;
             font-size: 1em;
             margin-bottom: 20px;
             text-shadow: 0 0 5px #00ffff;
+        }        .description a {
+            color: #4a9eff;
+            text-decoration: none;
+            text-shadow: 0 0 3px #4a9eff;
+        }
+
+        .description a:hover {
+            color: #ffff00;
+            text-shadow: 0 0 8px #ffff00;
         }
 
         .games-section {
@@ -155,10 +162,90 @@
         .footer a {
             color: #00ffff;
             text-decoration: none;
+        }        .footer a:hover {
+            text-shadow: 0 0 5px #00ffff;
         }
 
-        .footer a:hover {
-            text-shadow: 0 0 5px #00ffff;
+        .conversation {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 0;
+            margin: 20px 0;
+            border: 1px solid #333;
+        }
+
+        .user-message {
+            background-color: #2d2d2d;
+            color: #e6e6e6;
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        .user-message::before {
+            content: "👤 User";
+            display: block;
+            font-weight: bold;
+            color: #4a9eff;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .copilot-message {
+            background-color: #1a1a1a;
+            color: #cccccc;
+            padding: 15px 20px;
+            position: relative;
+        }
+
+        .copilot-message::before {
+            content: "🤖 GitHub Copilot";
+            display: block;
+            font-weight: bold;
+            color: #00d4aa;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .tool-call {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        .tool-call::before {
+            content: "🔧 Tool: ";
+            color: #ffa500;
+            font-weight: bold;
+        }
+
+        .code-reference {
+            background-color: #0d47a1;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        .improvement-list {
+            background-color: #0a3d0a;
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .improvement-list::before {
+            content: "✅ Key Features:";
+            display: block;
+            font-weight: bold;
+            color: #4caf50;
+            margin-bottom: 8px;
         }
 
         @media (max-width: 768px) {
@@ -188,35 +275,66 @@
             <div id="p5Container"></div>
         
         <div class="description">
-            <h3>Project Overview</h3>
-            <p>This interactive project explores the complexities of artificial intelligence in academic administration through two playable games that examine how generative AI tools reshape both writing program administration and digital humanities center leadership. Created primarily through iterative dialogues with large language models, the games themselves embody the collaborative human-AI authorship they critique.</p>
-            
-            <p>Each version presents players with scenarios that highlight the tensions between efficiency and ethics, innovation and exploitation, speed and sustainability. The games ask: What happens when administrative decisions become algorithmic? How do we navigate the environmental costs of computational convenience? What gets lost when human judgment is outsourced to pattern recognition?</p>
-            
-            <p>Rather than offering simple answers, these "provocations through generated play" invite reflection on our evolving relationship with AI tools in higher education. The retro aesthetic and deliberate inefficiencies of the code serve as counterpoints to the sleek promises of AI optimization, suggesting that some forms of resistance might be found in embracing the human, the slow, and the intentionally imperfect.</p>
+            <h3>Multimodal Composition with Generative AI</h3>
+            <p>This piece is offered as both a demonstration of the role generative AI coding tools might play in multimodal composition, web development, and game design going forward, and as a commentary on the discourse surrounding generative AI in higher education today. Two iterative versions of a web-based game are included within: both are primarily generated through a method <a href="">John Murray and I teach as "distant coding,"</a> or the intentional use of generative AI tools to manipulate code through a combination of prompts and hand-coding to place the focus on content and design rather than syntax and structure. This method is a reflective, critical making-informed, approach to what has been popularly termed <a href="https://www.businessinsider.com/vibe-coding-ai-silicon-valley-andrej-karpathy-2025-2">"vibe coding" (attributed to Andrej Karpathy)</a>, a mode of working that he described as "not really coding -- I just see stuff, say stuff, run stuff, and copy-paste stuff, and it mostly works."</p>
+            <p>My approach to distant coding throughout this project is slightly different: some elements, particularly in the interface design, did require substantial editing, particularly for version one (completed in October 2024, before the term "vibe coding" was even coined) -- however, the second iteration, built in June 2025, required almost no editing other than the accompanying textual commentary. Both games are included here and intended to be played in sequence: notice the changes in specificity, illustration quality, some interface elements, and even the humor of the text, which is entirely generated (including the descriptions below):</p>
         </div>
 
         <div class="games-section">
             <div class="game-card">
-                <h4>Writing Program Edition</h4>
-                <p>Navigate the challenges of writing program administration in an AI-saturated academic landscape. From plagiarism detection to student support, every decision carries ethical weight in this exploration of composition pedagogy meets machine learning.</p>
+                <h4>Writing Program Edition (2024)</h4>
+                <p>Navigate the challenges of writing program administration in an AI-saturated academic landscape. From plagiarism detection to student support, every decision is fraught in this exploration of composition pedagogy meets machine learning.</p>
                 <a href="AIAdminWriting/index.html" class="play-button">PLAY WRITING</a>
             </div>
             
             <div class="game-card">
-                <h4>Digital Humanities Edition</h4>
+                <h4>Digital Humanities Edition (2025)</h4>
                 <p>Step into the role of a DH center director balancing computational innovation with humanistic values. Grapple with GPU environmental impacts, data ethics, and the challenge of explaining APIs to administrators who just want results.</p>
                 <a href="AIAdminDH/index.html" class="play-button">PLAY DH CENTER</a>
             </div>
         </div>
 
         <div class="description">
-            <h3>On Generated Authorship</h3>
-            <p>These games were created through approximately 200 iterative prompts across multiple AI systems (ChatGPT 4.0, Claude Opus 4.0, Claude Sonnet 4.0, DALL-E 3), with human curation, editing, and hand-coding throughout the process. The resulting artifacts raise questions about agency, creativity, and labor in an age of computational collaboration.</p>
+            <h3>Reflecting on Generated Authorship</h3>
+            <p>In combination, these games were created through approximately 100 iterative prompts across multiple AI systems (ChatGPT 4.0, Claude Opus 4.0, Claude Sonnet 4.0, DALL-E 3), with human curation, editing, and hand-coding throughout the process. The resulting artifacts raise questions about agency, creativity, and labor in an age of computational collaboration.</p>
             
-            <p>The code is intentionally inefficient—over 1,100 lines of JavaScript for relatively simple interactions—serving as a meditation on optimization culture. The visual assets, generated through AI image tools and then extensively modified, reflect a deliberate move away from photorealism toward the aesthetic possibilities of computational creativity.</p>
-            
-            <p>For scholars in rhetoric, composition, and digital humanities, these games offer both a critical lens and a creative methodology. They suggest that our engagement with AI tools might be most productive when it remains reflexive, experimental, and willing to embrace the productive tensions between human and machine authorship.</p>
+            <p>The code is far from optimized, but both iterations make reasonable use of the P5.js library, which I commonly teach as an accessible entrypoint into playful animation, electronic literature, multimodal composition, and basic web game design. The visual assets, generated through AI image tools and then extensively modified, are in many ways an extension of the concept of "programmer's art" but are sufficient to the rhetorical task of this particular project, and reflect two stages of image generation (generated about eight months apart).</p>
+              <p>Similarly, this landing page was initially generated using a single prompt in GitHub Copilot with Claude Sonnet 4.0:</p>
+
+            <div class="conversation">
+                <div class="user-message">
+                    This project, "AI Admin: Provocations Through Generated Play" by Anastasia Salter is intended for submission to the Kairos journal. It contains two versions of a game, each in subfolders, which need to be linked from the main index file with a contextualizing statement. The main page should be a fun, retro p5 page with space for a multi-paragraph statement describing the project and its goals.
+                </div>
+                
+                <div class="copilot-message">
+                    I'll help you create a main index page that links to both game versions with a contextualizing statement. Let me first examine the current structure and then create a retro p5.js page with the project description.
+                    
+                    <div class="tool-call">read_file index.html, lines 1 to 50</div>
+                    <div class="tool-call">read_file index.html, lines 50 to 143</div>
+                    
+                    Now let me check the other version to understand the structure:
+                    
+                    <div class="tool-call">read_file index.html, lines 1 to 50</div>
+                    
+                    Now I need to create a main <span class="code-reference">index.html</span> file at the root level that will serve as the landing page for the Kairos submission. This should be a fun, retro p5.js page that introduces the project and links to both versions.
+                    
+                    <div class="tool-call">create_file index.html</div>
+                    
+                    Perfect! I've created a main index page for your Kairos submission that includes:
+                    
+                    <div class="improvement-list">
+                        • <strong>🎮 Retro Aesthetic:</strong> Neon color scheme with animated gradients, "Press Start 2P" pixel font for headings, animated particle system using p5.js, glowing text effects and hover animations<br>
+                        • <strong>📝 Comprehensive Project Description:</strong> Multi-paragraph contextualizing statement explaining the project's goals, discussion of AI authorship and generated play as methodology<br>
+                        • <strong>🔗 Clear Navigation:</strong> Two prominent game cards linking to each version, Writing Program Edition and Digital Humanities Edition clearly differentiated<br>
+                        • <strong>📚 Academic Context:</strong> Positioned explicitly as a Kairos journal submission, discusses the project's relevance to rhetoric, composition, and DH<br>
+                        • <strong>✨ Interactive Elements:</strong> Animated particle system, responsive design for different screen sizes, smooth transitions and hover effects
+                    </div>
+                    
+                    The page serves as both an introduction to your scholarly work and a demonstration of the aesthetic and methodological approaches explored in the games themselves. The retro gaming aesthetic reinforces the project's themes while the academic framing positions it appropriately for journal publication.
+                </div>
+            </div>
+            <p>To my knowledge, this is the first almost entirely generated work submitted to <i>Kairos</i>. I offer it here as a provocation for how rapidly the process of multimodal composition can change. As someone who spends a significant amount of my time as an educator trying to find new ways to bring people into code, public scholarship, and game design, I am excited by the possibilities of this workflow and the ways working with agents can particularly eliminate many of the frustraion points in making. As an administrator and educator who also relies on student engagement through reading and writing, I am exhausted by much of the current conversation and the challenges that echo through in both these games.</p>
+
         </div>
 
         <div class="footer">
